@@ -20,6 +20,20 @@ try {
   console.log(err);
 }
 
+//Inserting New Data - using placeholders
+
+let q = "INSERT INTO user (id, username, email, password) VALUES (?, ?, ?, ?)"; //storing the query in a variable
+let user = ["1", "1_newsuperhero", "nsh@gmail.com", "nsh"]; //array to store the placeholder values
+
+try {
+  connection.query(q, user, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+  });
+} catch (err) {
+  console.log(err);
+}
+
 // end connection
 connection.end();
 
