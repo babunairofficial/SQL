@@ -20,33 +20,27 @@ try {
   console.log(err);
 }
 
-//Inserting New Data - using placeholders
 
-// let q = "INSERT INTO user (id, username, email, password) VALUES (?, ?, ?, ?)"; //storing the query in a variable
-// let user = ["1", "1_newsuperhero", "nsh@gmail.com", "nsh"]; //array to store the placeholder values
-
-// try {
-//   connection.query(q, user, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//   });
-// } catch (err) {
-//   console.log(err);
-// }
-
+//using faker to create and add random data to query
 let q = "INSERT INTO user (id, username, email, password) VALUES ?";
-//bulk insert query using a placeholder for multiple columns
 
-//user data as an array of arrays
-let users = [
-  ["2", "2_newsuperhero", "nshb@gmail.com", "nshb"],
-  ["3", "3_newsuperhero", "nshc@gmail.com", "nshc"]
-];
+let createRandomUser = () => {
+  return [
+    faker.string.uuid(),
+    faker.internet.username(),
+    faker.internet.email(),
+    faker.internet.password(),
+  ];
+}
 
+let data = [];
+for(let i=0; i<=100; i++) {
+  data.push(createRandomUser()); //100 fake users data using faker
+}
 
 try {
   // query with parameterized input
-  connection.query(q, [users], (err, result) => { // users data to be entered within square brackets
+  connection.query(q, [data], (err, result) => { // users data to be entered within square brackets
     if (err) throw err;
     console.log(result);
   });
@@ -56,12 +50,3 @@ try {
 
 // end connection
 connection.end();
-
-let createRandomUser = () => {
-  return {
-    userId: faker.string.uuid(),
-    username: faker.internet.username(),
-    email: faker.internet.email(),
-    password: faker.internet.password(),
-  };
-}
