@@ -1,6 +1,8 @@
 // CJS
 const { faker } = require('@faker-js/faker');
 const mysql = require('mysql2');
+const express = require("express");
+const app = express();
 
 // Create the connection to database
 const connection = mysql.createConnection({
@@ -10,43 +12,34 @@ const connection = mysql.createConnection({
   password: '' //enter password of connection created in mysql
 });
 
-//a query
-try {
-  connection.query("SHOW TABLES", (err, result) => {
-    if (err) throw err;
-    console.log(result);
-  });
-} catch (err) {
-  console.log(err);
-}
+// try {
+//   // query with parameterized input
+//   connection.query(q, [data], (err, result) => { // users data to be entered within square brackets
+//     if (err) throw err;
+//     console.log(result);
+//   });
+// } catch (err) {
+//   console.log(err);
+// }
 
+// // end connection
+// connection.end();
 
-//using faker to create and add random data to query
-let q = "INSERT INTO user (id, username, email, password) VALUES ?";
+app.get("/", (req, res) => {
+  let q = `SELECT count(*) FROM user`;
+  try {
+    // query with parameterized input
+    connection.query(q, (err, result) => { // users data to be entered within square brackets
+      if (err) throw err;
+      console.log(result);
+      res.send(result);
+    });
+  } catch (err) {
+    console.log(err);
+    res.send("database error");
+  }
+});
 
-let createRandomUser = () => {
-  return [
-    faker.string.uuid(),
-    faker.internet.username(),
-    faker.internet.email(),
-    faker.internet.password(),
-  ];
-}
-
-let data = [];
-for(let i=0; i<=100; i++) {
-  data.push(createRandomUser()); //100 fake users data using faker
-}
-
-try {
-  // query with parameterized input
-  connection.query(q, [data], (err, result) => { // users data to be entered within square brackets
-    if (err) throw err;
-    console.log(result);
-  });
-} catch (err) {
-  console.log(err);
-}
-
-// end connection
-connection.end();
+app.listen("8080", () => {
+  console.log("server is listening to port 8080");
+});
