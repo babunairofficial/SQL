@@ -18,7 +18,7 @@ const connection = mysql.createConnection({
 });
 
 
-
+//Home Route
 app.get("/", (req, res) => {
   let q = `SELECT count(*) FROM user`;
   try {
@@ -32,6 +32,27 @@ app.get("/", (req, res) => {
     console.log(err);
     res.send("database error");
   }
+});
+
+
+
+//Show Route
+app.get("/user", (req, res) => {
+  let q = `SELECT * FROM user`;
+  try {
+    connection.query(q, (err, users) => { // users data to be entered within square brackets
+      if (err) throw err;
+      
+      res.render("showusers.ejs", { users });
+    });
+  } catch (err) {
+    console.log(err);
+    res.send("database error");
+  }
+});
+
+app.listen("8080", () => {
+  console.log("server is listening to port 8080");
 });
 
 app.listen("8080", () => {
